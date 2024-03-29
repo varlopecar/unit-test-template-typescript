@@ -1,10 +1,6 @@
-import { NumberValidation } from "./NumberValidation";
-
 export class PhoneValidation {
   static validatePhone(input: string): string {
-    try {
-      NumberValidation.validateNumber(input);
-    } catch (error) {
+    if (input === "") {
       throw new Error("Le numéro ne peut pas être vide");
     }
 
@@ -17,14 +13,15 @@ export class PhoneValidation {
       throw new Error("Le numéro doit commencer par 04, 06, 07 ou 08");
     }
 
-    const digitsOnly = input.replace(/[\s./]/g, "");
-    if (digitsOnly.length !== 10) {
+    const separatorsRegex = /[./ ]/g;
+    const containsSeparators = separatorsRegex.test(input);
+    if (!containsSeparators && input.length !== 10) {
       throw new Error(
         "Le numéro doit contenir que 10 chiffres au total s'il ne contient pas de séparateur"
       );
     }
 
-    const separators = input.match(/[\s./]/g);
+    const separators = input.match(separatorsRegex);
     if (separators) {
       if (new Set(separators).size > 1) {
         throw new Error("Les séparateurs doivent être identiques");
